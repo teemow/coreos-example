@@ -1,0 +1,8 @@
+[Unit]
+Description=Ping
+
+[Service]
+ExecStart=/usr/bin/docker run --rm -p 80 --name %n giantswarm/ping:0.0.1
+ExecStop=/usr/bin/docker stop %n
+Restart=always
+

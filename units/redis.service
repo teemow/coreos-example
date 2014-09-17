@@ -1,0 +1,15 @@
+[Unit]
+Description=Redis
+After=registrator.service
+Requires=registrator.service
+
+[Service]
+Environment="IMAGE=dockerfile/redis:latest"
+EnvironmentFile=/etc/environment
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull $IMAGE
+ExecStart=/usr/bin/docker run -p ${COREOS_PRIVATE_IPV4}::6379 --name %n $IMAGE
+ExecStop=/usr/bin/docker stop %n
+Restart=always

@@ -1,0 +1,17 @@
+[Unit]
+Description=Weather App
+After=redis-ambassador.service
+Requires=redis-ambassador.service
+
+[Service]
+Environment="IMAGE=teemow/currentweather:latest"
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull $IMAGE
+ExecStart=/usr/bin/docker run -p 1337 --link redis-ambassador.service:redis --name %n $IMAGE
+ExecStop=/usr/bin/docker stop %n
+Restart=always
+
+[X-Fleet]
+MachineOf=redis-ambassador.service

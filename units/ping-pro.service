@@ -1,0 +1,12 @@
+[Unit]
+Description=Ping
+
+[Service]
+Environment="IMAGE=giantswarm/ping:latest"
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull $IMAGE
+ExecStart=/usr/bin/docker run -p 80 --name %n $IMAGE
+ExecStop=/usr/bin/docker stop %n
+Restart=always
